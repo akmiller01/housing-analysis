@@ -16,7 +16,24 @@ GetSearchResults <- function(address,citystatezip,rentzestimate=FALSE){
   }
   con <- curl(url)
   open(con)
-  text <- readLines(curl(url))
+  text <- readLines(con)
+  data <- xmlParse(text)
+  xml_data <- xmlToList(data)
+  closeAllConnections()
+  return(xml_data)
+}
+
+GetDeepSearchResults <- function(address,citystatezip,rentzestimate=FALSE){
+  base <- "http://www.zillow.com/webservice/GetDeepSearchResults.htm"
+  url <- paste(base,zws.id,sep="?zws-id=")
+  url <- paste(url,URLencode(address),sep="&address=")
+  url <- paste(url,URLencode(citystatezip),sep="&citystatezip=")
+  if(rentzestimate){
+    url <- paste(url,"true",sep="&rentzestimate=")
+  }
+  con <- curl(url)
+  open(con)
+  text <- readLines(con)
   data <- xmlParse(text)
   xml_data <- xmlToList(data)
   closeAllConnections()
@@ -33,7 +50,7 @@ GetDeepComps <- function(zpid,count=1,rentzestimate=FALSE){
   }
   con <- curl(url)
   open(con)
-  text <- readLines(curl(url))
+  text <- readLines(con)
   data <- xmlParse(text)
   xml_data <- xmlToList(data)
   closeAllConnections()
